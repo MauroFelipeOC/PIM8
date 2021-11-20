@@ -1,0 +1,9 @@
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\bin\Debug\PIM8.exe.config
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\bin\Debug\PIM8.exe
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\bin\Debug\PIM8.pdb
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.csproj.AssemblyReference.cache
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.Properties.Resources.resources
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.csproj.GenerateResource.cache
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.csproj.CoreCompileInputs.cache
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.exe
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.pdb
