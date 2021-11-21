@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace PIM8
 {
@@ -58,6 +59,10 @@ namespace PIM8
                 cmdPessoa.ExecuteNonQuery();
                 cmdTelefone.ExecuteNonQuery();
                 cmdPessoaTelefone.ExecuteNonQuery();
+                cmdEndereco.Dispose();
+                cmdPessoa.Dispose();
+                cmdTelefone.Dispose();
+                cmdPessoaTelefone.Dispose();
             }
             catch (Exception)
             {
@@ -81,7 +86,44 @@ namespace PIM8
 
         static public Pessoa Consulte(long cpf)
         {
+            
+            
+            SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;");
+
+            string strSQL = "SELECT * FROM PESSOA WHERE CPF = @CPF";
+            SqlCommand cmdConsulte = new SqlCommand(strSQL, conexao);
+
+            cmdConsulte.Parameters.AddWithValue("@CPF", cpf);
+
             Pessoa p = new Pessoa();
+
+            try
+            {
+                conexao.Open();
+
+                SqlDataAdapter dataAdapter;
+                SqlDataReader dataReader;
+
+                dataReader = cmdConsulte.ExecuteReader();
+
+                p.cpf = cpf;
+
+                while (dataReader.Read())
+                {
+                    p.nome = (string)dataReader["NOME"];
+                    p.ID = (int)dataReader["ID"];
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conexao.Close();
+                cmdConsulte.Dispose();
+            }
+
             return p;
         }
     }

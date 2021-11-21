@@ -7,3 +7,4 @@ C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.csproj.GenerateResou
 C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.csproj.CoreCompileInputs.cache
 C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.exe
 C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.pdb
+C:\Users\Mauro Felipe\source\repos\PIM8\PIM8\obj\Debug\PIM8.Form1.resources

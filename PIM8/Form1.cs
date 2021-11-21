@@ -15,8 +15,12 @@ namespace PIM8
         public Form1()
         {
             InitializeComponent();
+        }
 
+        private void btnInserir_Click(object sender, EventArgs e)
+        {
             Pessoa p = new Pessoa();
+                        
             //p.ID = 4;
             p.nome = "Fulano";
             p.cpf = 046;
@@ -39,7 +43,13 @@ namespace PIM8
             p.telefones.Add(telefone);
             
             PessoaDAO.Insira(p);
-            
+        }
+
+        private void btnConsulta_Click(object sender, EventArgs e)
+        {
+            Pessoa p = new Pessoa();
+            p = PessoaDAO.Consulte(long.Parse(txtCPF.Text));
+            label1.Text = "ID:" + p.ID + " NOME:" + p.nome;
         }
     }
 }
