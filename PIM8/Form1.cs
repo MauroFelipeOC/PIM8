@@ -15,6 +15,7 @@ namespace PIM8
         public Form1()
         {
             InitializeComponent();
+            label1.Text = Convert.ToString(PessoaDAO.Altere());
         }
 
         private void btnInserir_Click(object sender, EventArgs e)
@@ -22,7 +23,7 @@ namespace PIM8
             Pessoa p = new Pessoa();
                         
             //p.ID = 4;
-            p.nome = "Fulano";
+            p.nome = "Beltrano";
             p.cpf = 046;
             //p.endereco
             p.endereco = new Endereco();
