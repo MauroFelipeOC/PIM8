@@ -136,7 +136,7 @@ namespace PIM8
             return true;
         }
 
-        static public int Altere(/*Pessoa pessoa*/)
+        static public int Altere(Pessoa pessoa)
         {
             SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;");
             string strSQL;
@@ -165,17 +165,17 @@ namespace PIM8
         }
 
         static public Pessoa Consulte(long cpf)
-        {
-            
-            
+        {         
             SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;");
 
             string strSQL = "SELECT * FROM PESSOA WHERE CPF = @CPF";
-            SqlCommand cmdConsulte = new SqlCommand(strSQL, conexao);
+            SqlCommand cmdConsultePessoa = new SqlCommand(strSQL, conexao);
 
-            cmdConsulte.Parameters.AddWithValue("@CPF", cpf);
+            cmdConsultePessoa.Parameters.AddWithValue("@CPF", cpf);
 
             Pessoa p = new Pessoa();
+            int idEndereco=0;
+            int idTelefone;
 
             try
             {
@@ -184,7 +184,7 @@ namespace PIM8
                 SqlDataAdapter dataAdapter;
                 SqlDataReader dataReader;
 
-                dataReader = cmdConsulte.ExecuteReader();
+                dataReader = cmdConsultePessoa.ExecuteReader();
 
                 p.cpf = cpf;
 
@@ -192,6 +192,7 @@ namespace PIM8
                 {
                     p.nome = (string)dataReader["NOME"];
                     p.ID = (int)dataReader["ID"];
+                    idEndereco = (int)dataReader["ENDERECO"];
                 }
             }
             catch (Exception ex)
@@ -201,8 +202,116 @@ namespace PIM8
             finally
             {
                 conexao.Close();
-                cmdConsulte.Dispose();
+                cmdConsultePessoa.Dispose();
             }
+            
+            strSQL = "SELECT * FROM ENDERECO WHERE ID = @ID";
+            SqlCommand cmdConsulteEndereco = new SqlCommand(strSQL, conexao);
+
+            cmdConsulteEndereco.Parameters.AddWithValue("@ID", idEndereco);
+
+            try
+            {
+                conexao.Open();
+
+                SqlDataAdapter dataAdapter;
+                SqlDataReader dataReader;
+
+                dataReader = cmdConsulteEndereco.ExecuteReader();
+
+                p.endereco = new Endereco();                
+
+                while (dataReader.Read())
+                {
+                    p.endereco.logradouro = (string)dataReader["LOGRADOURO"];
+                    p.endereco.numero = (int)dataReader["NUMERO"];
+                    p.endereco.cep = (int)dataReader["CEP"];
+                    p.endereco.bairro = (string)dataReader["BAIRRO"];
+                    p.endereco.cidade = (string)dataReader["CIDADE"];
+                    p.endereco.estado = (string)dataReader["UF"];
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conexao.Close();
+                cmdConsulteEndereco.Dispose();
+            }
+
+            strSQL = "SELECT * FROM PESSOA_TELEFONE WHERE ID_PESSOA = @ID_PESSOA";
+            SqlCommand cmdConsultePessoaTelefone = new SqlCommand(strSQL, conexao);
+
+            cmdConsultePessoaTelefone.Parameters.AddWithValue("@ID_PESSOA", p.ID);
+
+            List<int> idsTelefones = new List<int>();
+
+            try
+            {
+                conexao.Open();
+
+                SqlDataAdapter dataAdapter;
+                SqlDataReader dataReader;
+
+                dataReader = cmdConsultePessoaTelefone.ExecuteReader();
+                
+                while (dataReader.Read())
+                {
+                    idsTelefones.Add((int)dataReader["ID_TELEFONE"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conexao.Close();
+                cmdConsulteEndereco.Dispose();
+            }
+
+            int tipoTelefone;
+
+            foreach(int id in idsTelefones)
+            {
+                strSQL = "SELECT * FROM TELEFONE WHERE ID = @ID";
+                SqlCommand cmdConsulteTelefone = new SqlCommand(strSQL, conexao);
+
+                cmdConsulteTelefone.Parameters.AddWithValue("@ID", 1);
+
+                Telefone telefone = new Telefone();
+                telefone.ID = id;
+
+                try
+                {
+                    conexao.Open();
+
+                    SqlDataAdapter dataAdapter;
+                    SqlDataReader dataReader;
+
+                    dataReader = cmdConsulteTelefone.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        telefone.numero = Convert.ToInt32(dataReader["NUMERO"]);
+                        telefone.ddd = (int)dataReader["DDD"];
+                        tipoTelefone = (int)dataReader["TIPO"];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    conexao.Close();
+                    cmdConsulteTelefone.Dispose();
+                }
+                p.telefones.Add(telefone);
+            }            
+
 
             return p;
         }

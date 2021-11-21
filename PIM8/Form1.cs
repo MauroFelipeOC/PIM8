@@ -14,8 +14,7 @@ namespace PIM8
     {
         public Form1()
         {
-            InitializeComponent();
-            label1.Text = Convert.ToString(PessoaDAO.Altere());
+            InitializeComponent();            
         }
 
         private void btnInserir_Click(object sender, EventArgs e)
@@ -50,7 +49,8 @@ namespace PIM8
         {
             Pessoa p = new Pessoa();
             p = PessoaDAO.Consulte(long.Parse(txtCPF.Text));
-            label1.Text = "ID:" + p.ID + " NOME:" + p.nome;
+            label1.Text = "ID:" + p.ID + " NOME:" + p.nome + " LOGRADOURO:" + p.endereco.logradouro + " Telefone:" + p.telefones[0].numero.ToString();
+            //MessageBox.Show(p.cpf.ToString());
         }
     }
 }
