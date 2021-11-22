@@ -30,6 +30,8 @@ namespace daoPessoa
             int idPessoa;
             int idTelefone;
 
+            bool resultado = true;
+
             try
             {
                 conexao.Open();
@@ -37,9 +39,10 @@ namespace daoPessoa
                 idPessoa = 1 + Convert.ToInt32(cmdIdentCurrentPessoa.ExecuteScalar());
                 idTelefone = 1 + Convert.ToInt32(cmdIdentCurrentTelefone.ExecuteScalar());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                resultado = false;
+                throw ex;
             }
             finally
             {
@@ -85,6 +88,7 @@ namespace daoPessoa
                 }
                 catch (Exception)
                 {
+                    resultado = false;
                     throw;
                 }
                 finally
@@ -103,9 +107,10 @@ namespace daoPessoa
                 cmdEndereco.Dispose();
                 cmdPessoa.Dispose();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                resultado = false;
+                throw ex;
             }
             finally
             {
@@ -113,9 +118,7 @@ namespace daoPessoa
             }
             conexao = null;
 
-
-
-            return true;
+            return resultado;
         }      
 
         static public Pessoa Consulte(long cpf)
@@ -129,7 +132,7 @@ namespace daoPessoa
 
             Pessoa p = new Pessoa();
             int idEndereco=0;
-
+            
             try
             {
                 conexao.Open();
@@ -260,9 +263,12 @@ namespace daoPessoa
             return p;
         }
 
-        public static void Exclua(int id)
+        public static bool Exclua(int id)
         {
             SqlConnection conexao = new SqlConnection(dataSource);
+
+            bool resultado = true;
+
             try
             {
                 conexao.Open();
@@ -274,18 +280,23 @@ namespace daoPessoa
             }
             catch (Exception ex)
             {
+                resultado = false;
                 throw ex;
             }
             finally
             {
                 conexao.Close();
             }
+            return resultado;
         }
 
-        public static void Altere(int id, Pessoa pessoa)
+        public static bool Altere(int id, Pessoa pessoa)
         {
             string dataSource = @"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True; MultipleActiveResultSets=true";
             SqlConnection conexao = new SqlConnection(dataSource);
+
+            bool resultado = true;
+
             try
             {
                 conexao.Open();
@@ -329,12 +340,14 @@ namespace daoPessoa
             }
             catch (Exception ex)
             {
+                resultado = false;
                 throw ex;
             }
             finally
             {
                 conexao.Close();
             }
+            return resultado;
         }
     }
 }
