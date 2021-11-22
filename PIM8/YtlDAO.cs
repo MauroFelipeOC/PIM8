@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using daoPessoa;
+using ModelPIM8;
 
 namespace PIM8
 {
@@ -18,11 +20,9 @@ namespace PIM8
         {
             SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= dbPIM8; Integrated Security=True;");
             string strSQL = "INSERT INTO TESTE (NOME) VALUES(@NOME)";
-            SqlCommand comando = new SqlCommand(strSQL, conexao); ;
-            SqlDataAdapter da;
-            SqlDataReader dr;
+            SqlCommand comando = new SqlCommand(strSQL, conexao);            
 
-            comando.Parameters.AddWithValue("@NOME", pessoa.nome);
+            comando.Parameters.AddWithValue("@NOME", pessoa.Nome);
             try
             {
                 conexao.Open();

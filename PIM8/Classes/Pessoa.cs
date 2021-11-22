@@ -4,22 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PIM8
+namespace ModelPIM8
 {
     class Pessoa
     {
-        protected int id = -1;
+        protected int _id = -1;
+        
+        private string _nome;
+        private long _cpf;
+
         public int ID
         {
-            get { return id; }
+            get { return _id; }
             set
             {
-                if (id == -1) id = value;
+                if (_id == -1) _id = value;
             }
         }
-        public string nome;
+        public string Nome { get { return this._nome; } set { this._nome = value; } }
         public Endereco endereco;
-        public long cpf;
-        public List<Telefone> telefones = new List<Telefone>();
+        public long Cpf { get { return this._cpf; } set { this._cpf = value; } }
+        public List<Telefone> Telefones = new List<Telefone>();
     }
 }

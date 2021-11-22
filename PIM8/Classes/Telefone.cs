@@ -4,21 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PIM8
+namespace ModelPIM8
 {
     class Telefone
     {
-        protected int id;
+        protected int _id = -1;
+        private int _numero;
+        private int _ddd;
+
         public int ID
         {
-            get { return id; }
+            get { return _id; }
             set
             {
-                if (id == -1) id = value;
+                if (_id == -1) _id = value;
             }
         }
-        public int numero;
-        public int ddd;
+        public int Numero { get { return this._numero; } set { this._numero = value; } }
+        public int Ddd { get { return this._ddd; } set { this._ddd = value; } }
         public TipoTelefone tipoTelefone;
     }
 }

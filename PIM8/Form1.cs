@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using daoPessoa;
+using ModelPIM8;
 
 namespace PIM8
 {
@@ -21,7 +23,7 @@ namespace PIM8
         {
             Pessoa p = new Pessoa();
                         
-            //p.ID = 4;
+            /*//p.ID = 4;
             p.nome = "Tomate";
             p.cpf = 2453;
             //p.endereco
@@ -45,15 +47,15 @@ namespace PIM8
             //PessoaDAO.Insira(p);
 
             PessoaDAO.Altere(7, p);
-            //PessoaDAO.Exclua(8);
+            //PessoaDAO.Exclua(8);*/
         }
 
         private void btnConsulta_Click(object sender, EventArgs e)
         {
-            Pessoa p = new Pessoa();
+            /*Pessoa p = new Pessoa();
             p = PessoaDAO.Consulte(long.Parse(txtCPF.Text));
             label1.Text = "ID:" + p.ID + " NOME:" + p.nome + " LOGRADOURO:" + p.endereco.logradouro + " Telefone:" + p.telefones[0].numero.ToString();
-            //MessageBox.Show(p.cpf.ToString());
+            //MessageBox.Show(p.cpf.ToString());*/
         }
     }
 }
