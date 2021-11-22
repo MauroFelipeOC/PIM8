@@ -10,11 +10,6 @@ namespace PIM8
 {
     class PessoaDAO
     {        
-        static public bool Exclua(Pessoa pessoa)
-        {
-            return true;
-        }
-
         static public bool Insira(Pessoa pessoa)
         {
             SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;");
@@ -66,17 +61,6 @@ namespace PIM8
             cmdPessoa.Parameters.AddWithValue("@CPF", pessoa.cpf);
             cmdPessoa.Parameters.AddWithValue("@ENDERECO", idEndereco);
 
-            /*strSQL = "INSERT INTO TELEFONE (NUMERO, DDD, TIPO) VALUES(@NUMERO, @DDD, @TIPO)";
-            SqlCommand cmdTelefone = new SqlCommand(strSQL, conexao);
-            cmdTelefone.Parameters.AddWithValue("@NUMERO", 32121234);
-            cmdTelefone.Parameters.AddWithValue("@DDD", pessoa.telefones[0].ddd);
-            cmdTelefone.Parameters.AddWithValue("@TIPO", pessoa.telefones[0].tipoTelefone);
-
-            strSQL = "INSERT INTO PESSOA_TELEFONE (ID_PESSOA, ID_TELEFONE) VALUES(@ID_PESSOA, @ID_TELEFONE)";
-            SqlCommand cmdPessoaTelefone = new SqlCommand(strSQL, conexao);
-            cmdPessoaTelefone.Parameters.AddWithValue("@ID_PESSOA", idPessoa *//*pessoa.ID*//*);
-            cmdPessoaTelefone.Parameters.AddWithValue("@ID_TELEFONE", idTelefone *//*pessoa.telefones[0].ID*//*);*/            
-
             foreach(Telefone telefone in pessoa.telefones)
             {
                 strSQL = "INSERT INTO TELEFONE (NUMERO, DDD, TIPO) VALUES(@NUMERO, @DDD, @TIPO)";
@@ -113,13 +97,9 @@ namespace PIM8
             {
                 conexao.Open();
                 cmdEndereco.ExecuteNonQuery();
-                cmdPessoa.ExecuteNonQuery();
-                //cmdTelefone.ExecuteNonQuery();
-                //cmdPessoaTelefone.ExecuteNonQuery();
+                cmdPessoa.ExecuteNonQuery();                
                 cmdEndereco.Dispose();
                 cmdPessoa.Dispose();
-                //cmdTelefone.Dispose();
-                //cmdPessoaTelefone.Dispose();
             }
             catch (Exception)
             {
@@ -134,35 +114,7 @@ namespace PIM8
 
 
             return true;
-        }
-
-        static public int Altere(Pessoa pessoa)
-        {
-            SqlConnection conexao = new SqlConnection(@"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;");
-            string strSQL;
-
-            strSQL = "SELECT IDENT_CURRENT('PESSOA');";
-            SqlCommand cmdEndereco = new SqlCommand(strSQL, conexao);
-
-            int retor;
-            try
-            {
-                conexao.Open();
-                retor = Convert.ToInt32(cmdEndereco.ExecuteScalar());
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                cmdEndereco.Dispose();
-                conexao.Close();
-            }
-
-            return retor;
-        }
+        }      
 
         static public Pessoa Consulte(long cpf)
         {         
@@ -175,13 +127,11 @@ namespace PIM8
 
             Pessoa p = new Pessoa();
             int idEndereco=0;
-            int idTelefone;
 
             try
             {
                 conexao.Open();
-
-                SqlDataAdapter dataAdapter;
+                                
                 SqlDataReader dataReader;
 
                 dataReader = cmdConsultePessoa.ExecuteReader();
@@ -197,7 +147,7 @@ namespace PIM8
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {
@@ -213,10 +163,8 @@ namespace PIM8
             try
             {
                 conexao.Open();
-
-                SqlDataAdapter dataAdapter;
+                
                 SqlDataReader dataReader;
-
                 dataReader = cmdConsulteEndereco.ExecuteReader();
 
                 p.endereco = new Endereco();                
@@ -252,9 +200,7 @@ namespace PIM8
             {
                 conexao.Open();
 
-                SqlDataAdapter dataAdapter;
                 SqlDataReader dataReader;
-
                 dataReader = cmdConsultePessoaTelefone.ExecuteReader();
                 
                 while (dataReader.Read())
@@ -287,10 +233,8 @@ namespace PIM8
                 try
                 {
                     conexao.Open();
-
-                    SqlDataAdapter dataAdapter;
+                    
                     SqlDataReader dataReader;
-
                     dataReader = cmdConsulteTelefone.ExecuteReader();
 
                     while (dataReader.Read())
@@ -310,10 +254,86 @@ namespace PIM8
                     cmdConsulteTelefone.Dispose();
                 }
                 p.telefones.Add(telefone);
-            }            
-
-
+            }
             return p;
+        }
+
+        public static void Exclua(int id)
+        {
+            string dataSource = @"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True;";
+            SqlConnection conexao = new SqlConnection(dataSource);
+            try
+            {
+                conexao.Open();
+                string query = "DELETE FROM dbo.Pessoa WHERE id=@id";
+                SqlCommand cmd = new SqlCommand(query, conexao);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                conexao.Close();
+            }
+        }
+
+        public static void Altere(int id, Pessoa pessoa)
+        {
+            string dataSource = @"Server= localhost\SQLEXPRESS; Database= TestePIM; Integrated Security=True; MultipleActiveResultSets=true";
+            SqlConnection conexao = new SqlConnection(dataSource);
+            try
+            {
+                conexao.Open();
+                //Buscar Endereço da Pessoa a ser alterada
+                string query = "SELECT * FROM dbo.Pessoa WHERE id = @id";
+                SqlCommand cmd = new SqlCommand(query, conexao);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                int enderecoIdPessoaAlterada = 0;
+                if (reader.Read())
+                {
+                enderecoIdPessoaAlterada = Convert.ToInt32(reader["ENDERECO"].ToString());
+                }                
+
+                //Atualizar endereço
+                Endereco endereco = pessoa.endereco;
+                query = "UPDATE dbo.Endereco SET logradouro=@logradouro, " +
+                    "numero=@numero, cep=@cep , bairro=@bairro , cidade=@cidade , uf=@uf WHERE id=@id ";                                  
+                cmd = new SqlCommand(query, conexao);
+
+                cmd.Parameters.AddWithValue("@logradouro", endereco.logradouro);
+                cmd.Parameters.AddWithValue("@numero", endereco.numero);
+                cmd.Parameters.AddWithValue("@cep", endereco.cep);
+                cmd.Parameters.AddWithValue("@bairro", endereco.bairro);
+                cmd.Parameters.AddWithValue("@cidade", endereco.cidade);
+                cmd.Parameters.AddWithValue("@uf", endereco.estado);
+                cmd.Parameters.AddWithValue("@id", enderecoIdPessoaAlterada);
+
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                //Atualizar Pessoa
+                query = "UPDATE PESSOA SET nome=@nome, cpf=@cpf WHERE id=@id";
+                cmd = new SqlCommand(query, conexao);
+                cmd.Parameters.AddWithValue("@nome", pessoa.nome);
+                cmd.Parameters.AddWithValue("@cpf", pessoa.cpf);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                conexao.Close();
+            }
         }
     }
 }

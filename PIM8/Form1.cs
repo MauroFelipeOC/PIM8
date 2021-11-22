@@ -22,8 +22,8 @@ namespace PIM8
             Pessoa p = new Pessoa();
                         
             //p.ID = 4;
-            p.nome = "Beltrano";
-            p.cpf = 046;
+            p.nome = "Tomate";
+            p.cpf = 2453;
             //p.endereco
             p.endereco = new Endereco();
             //p.endereco.ID = 4;
@@ -41,8 +41,11 @@ namespace PIM8
             tipoTelefone.tipo = "Celular";
             telefone.tipoTelefone = tipoTelefone;
             p.telefones.Add(telefone);
-            
-            PessoaDAO.Insira(p);
+
+            //PessoaDAO.Insira(p);
+
+            PessoaDAO.Altere(7, p);
+            //PessoaDAO.Exclua(8);
         }
 
         private void btnConsulta_Click(object sender, EventArgs e)
